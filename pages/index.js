@@ -1,30 +1,52 @@
-import Head from 'next/head'
-
 const si = require('systeminformation');
-export async function getServerSideProps() {
-  const cpu = await si.cpu();
-  const cpuTemperature = await si.cpuTemperature();
 
-  // Pass data to the page via props
-  return { props: { cpu, cpuTemperature } }
+export async function getServerSideProps() {
+  try {
+    const query = {
+      time: 'current, uptime, timezoneName',
+	    cpu: 'manufacturer, vender, speed, speedmin, speedmax, physicalCores',
+	    cpuCurrentspeed: 'min, max, avg',
+	    cpuTemperature: 'main',
+	    mem: '*',
+	    osInfo: 'distro, release, codename, kernel, arch',
+	    versions: '*',
+	    currentLoad: 'avgload, currentload, currentload_user, currentload_system, currentload_nice, currentload_idle',
+
+    };
+
+
+    const data = await si.get(query);
+
+	  const currentLoad = await si.currentLoad();
+	  const fsSize = await si.fsSize();
+
+
+    return { props: { data, currentLoad, fsSize, } };
+  } catch (e) {
+    console.log(e);
+    return { props: {} };
+  }
 }
 
-export default function Home({ cpu, cpuTemperature }) {
+export default function Home(
+  {
+    data, currentLoad, fsSize,
+  }) {
+	console.log("------ data: ", data);
+	console.log("------ currentLoad: ", currentLoad);
+	console.log("------ fsSize: ", fsSize);
   return (
     <div className="container">
       <main>
         <h1 className="title">
           Pi Monitor
         </h1>
-        <h2>Speed: {cpu.speed}</h2>
-        <h2>Cores: {cpu.cores}</h2>
-        <h2>Temp Main: {cpuTemperature.main}</h2>
       </main>
 
       <footer>
       </footer>
 
-      <style jsx>{`
+      <style jsx>{ `
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
@@ -82,9 +104,9 @@ export default function Home({ cpu, cpuTemperature }) {
           font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
         }
-      `}</style>
+      ` }</style>
 
-      <style jsx global>{`
+      <style jsx global>{ `
         html,
         body {
           padding: 0;
@@ -97,7 +119,8 @@ export default function Home({ cpu, cpuTemperature }) {
         * {
           box-sizing: border-box;
         }
-      `}</style>
+      ` }</style>
     </div>
-  )
+  );
 }
+
