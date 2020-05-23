@@ -90,8 +90,9 @@ export default function Home(
 
   const partitions = data.fsSize.map(partition => {
     return (
-      <div>
-        <svg viewBox="-25 -25 150 150" style={ { display: "block", width: "100px" } }>
+      <div className="d-flex">
+        <div>
+        <svg viewBox="-25 -35 150 150" style={ { display: "block", width: "100px" } }>
           <path
             d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96"
             stroke="#eee"
@@ -108,18 +109,28 @@ export default function Home(
             } }
           />
         </svg>
-        <div className="text-center">{ partition.mount }</div>
         <div className="progressbar-text text-muted text-center"
              style={ {
                padding: '0px',
                margin: '0px',
                fontSize: '0.8rem',
                position: 'relative',
-               top: '-83px',
+               top: '-55px',
                left: '0',
              } }
         >
           { partition.use.toFixed(0) + '%' }
+        </div>
+        </div>
+        <div className="d-flex align-items-center ml-3">
+          <div className="d-flex flex-column justify-content-center">
+            <div className=""><strong>{ partition.mount }</strong></div>
+            <div className="text-black-50">
+              <small>
+                { 'Total: ' + (partition.size/1024/1024/1024).toFixed(0) + ' GB'}
+              </small>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -209,11 +220,9 @@ export default function Home(
                   <div className="text-muted mb-2">
                     Disk & File System
                   </div>
-                  <div className="card-body d-flex justify-content-between flex-wrap">
-                    {
-                      partitions
-                    }
-                  </div>
+                  {
+                    partitions
+                  }
                 </div>
               </div>
             </div>
