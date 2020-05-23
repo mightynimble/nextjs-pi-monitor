@@ -147,7 +147,7 @@ export default function Home(
             <div className="card-body pt-0">
               <div className="d-flex justify-content-around align-items-center">
                 <div className="card-text h1 text-center">
-                  { data.cpuTemperature.main }‎ °C
+                  { data.cpuTemperature.main.toFixed(0) }‎ °C
                 </div>
                 <div className="progress progress-bar-vertical">
                   <div className={ `progress-bar progress-bar-striped` }
@@ -209,7 +209,7 @@ export default function Home(
                   <div className="text-muted mb-2">
                     Disk & File System
                   </div>
-                  <div className="card-body d-flex justify-content-between">
+                  <div className="card-body d-flex justify-content-between flex-wrap">
                     {
                       partitions
                     }
