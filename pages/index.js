@@ -147,7 +147,7 @@ export default function Home(
   });
 
   const tempColor = cpuTempColor(data.cpuTemperature.main);
-  const loadColor = cpuLoadColor(data.currentLoad.avgload);
+  const loadColor = cpuLoadColor(data.currentLoad.avgload * 100);
   const usedColor = memUsedColor(data.mem.available, data.mem.total);
 
   return (
