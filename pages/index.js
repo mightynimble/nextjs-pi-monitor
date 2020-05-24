@@ -1,8 +1,15 @@
 const si = require('systeminformation');
+const shell = require('shelljs');
+
 const red = '#dc3545';
 const orange = '#fd7e14';
 const yellow = '#ffc107';
 const green = '#28a745';
+
+async function getVpnStatus() {
+  const stdout = shell.exec('sudo expressvpn status', {shell: '/usr/local/bin/bash'});
+  return !stdout.stdout.startsWith('Not connected');
+}
 
 export async function getServerSideProps() {
   try {
@@ -18,7 +25,9 @@ export async function getServerSideProps() {
 
     const data = await si.get(query);
 
-    return { props: { data } };
+    const vpnStatus = await getVpnStatus();
+
+    return { props: { data, connected: vpnStatus } };
   } catch (e) {
     console.log(e);
     return { props: {} };
@@ -86,6 +95,7 @@ function diskUsedColor(use) {
 export default function Home(
   {
     data,
+    connected,
   }) {
 
   const partitions = data.fsSize.map(partition => {
@@ -150,6 +160,13 @@ export default function Home(
         <div className="text-center py-2">
           <strong>{ data.osInfo.distro }</strong> { `${ data.osInfo.release } (${ data.osInfo.codename }) ${ data.osInfo.kernel } ${ data.osInfo.arch }` }
         </div>
+
+        {connected &&
+        <div className="alert alert-success">Connected to VPN</div>
+        }
+        {!connected &&
+        <div className="alert alert-danger">Not Connected to VPN</div>
+        }
 
         <div className="row">
           <div className="card col-md-4 col-sm-12 m-3">

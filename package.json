@@ -12,7 +12,8 @@
     "next": "9.3.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "systeminformation": "^4.26.4"
+    "systeminformation": "^4.26.4",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "purgecss": "^2.2.1"
