@@ -8,7 +8,7 @@ const green = '#28a745';
 
 async function getVpnStatus() {
   const stdout = shell.exec('sudo expressvpn status', {shell: '/usr/local/bin/bash'});
-  return !stdout.stdout.contains('Not connected');
+  return !stdout.stdout.includes('Not connected');
 }
 
 export async function getServerSideProps() {
