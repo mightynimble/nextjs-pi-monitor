@@ -92,6 +92,16 @@ function diskUsedColor(use) {
   return red;
 }
 
+function disconnect(e) {
+  console.log("------------- disconnect!");
+  shell.exec('sudo expressvpn disconnect', {shell: '/usr/local/bin/bash'});
+}
+
+function connect(e) {
+  console.log("------------- connect!");
+  shell.exec('sudo expressvpn connect', {shell: '/usr/local/bin/bash'});
+}
+
 export default function Home(
   {
     data,
@@ -162,10 +172,16 @@ export default function Home(
         </div>
 
         {connected &&
-        <div className="alert alert-success">Connected to VPN</div>
+        <div className="alert alert-success d-flex justify-content-between align-items-center">
+          <div>Connected to VPN</div>
+          <button className="btn btn-danger" onClick={disconnect}>Disconnect</button>
+        </div>
         }
         {!connected &&
-        <div className="alert alert-danger">Not Connected to VPN</div>
+        <div className="alert alert-danger d-flex justify-content-between align-items-center">
+          Not Connected to VPN
+          <span><button className="btn btn-primary" onClick={connect}>Disconnect</button></span>
+        </div>
         }
 
         <div className="row">
