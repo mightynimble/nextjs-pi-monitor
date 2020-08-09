@@ -95,12 +95,12 @@ function diskUsedColor(use) {
 
 function disconnect(e) {
   console.log("------------- disconnect!");
-  shell.exec('sudo expressvpn disconnect', {shell: '/usr/local/bin/bash'});
+  // shell.exec('sudo expressvpn disconnect', {shell: '/usr/local/bin/bash'});
 }
 
 function connect(e) {
   console.log("------------- connect!");
-  shell.exec('sudo expressvpn connect', {shell: '/usr/local/bin/bash'});
+  // shell.exec('sudo expressvpn connect', {shell: '/usr/local/bin/bash'});
 }
 
 export default function Home(
@@ -181,7 +181,7 @@ export default function Home(
         {!connected &&
         <div className="alert alert-danger d-flex justify-content-between align-items-center">
           Not Connected to VPN
-          <span><button className="btn btn-primary" onClick={connect}>Disconnect</button></span>
+          <button className="btn btn-primary" onClick={connect}>Connect</button>
         </div>
         }
 
