@@ -1,15 +1,17 @@
 const si = require('systeminformation');
-const shell = require('shelljs');
+const fetch = require('node-fetch');
 
 const red = '#dc3545';
 const orange = '#fd7e14';
 const yellow = '#ffc107';
 const green = '#28a745';
 
+const apiRootUrl = 'http://localhost:8181';
+
 async function getVpnStatus() {
-  const stdout = shell.exec('sudo expressvpn status', {shell: '/usr/bin/bash'});
-  console.log("------ VPN status: ", stdout);
-  return !stdout.stdout.includes('Not connected');
+  const res = await fetch(`${ apiRootUrl }/expressvpn/status`);
+  const json = await res.json();
+  return json['expressvpn']['connected'];
 }
 
 export async function getServerSideProps() {
@@ -33,6 +35,16 @@ export async function getServerSideProps() {
     console.log(e);
     return { props: {} };
   }
+}
+
+function disconnect(e) {
+  fetch(`${ apiRootUrl }/expressvpn/disconnect`, { method: 'post' });
+  window.location.assign('/');
+}
+
+function connect(e) {
+  fetch(`${ apiRootUrl }/expressvpn/connect`, { method: 'post' });
+  window.location.assign('/');
 }
 
 function cpuTempColor(temp) {
@@ -103,42 +115,42 @@ export default function Home(
     return (
       <div className="d-flex">
         <div>
-        <svg viewBox="-25 -35 150 150" style={ { display: "block", width: "100px" } }>
-          <path
-            d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96"
-            stroke="#eee"
-            strokeWidth="30"
-            fillOpacity="0"/>
-          <path
-            d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96"
-            stroke={ diskUsedColor(partition.use) }
-            strokeWidth="30"
-            fillOpacity="0"
-            style={ {
-              strokeDasharray: "301.635, 301.635",
-              strokeDashoffset: `${ (1 - partition.use / 100) * 301.635 }`
-            } }
-          />
-        </svg>
-        <div className="progressbar-text text-muted text-center"
-             style={ {
-               padding: '0px',
-               margin: '0px',
-               fontSize: '0.8rem',
-               position: 'relative',
-               top: '-55px',
-               left: '0',
-             } }
-        >
-          { partition.use.toFixed(0) + '%' }
-        </div>
+          <svg viewBox="-25 -35 150 150" style={ { display: "block", width: "100px" } }>
+            <path
+              d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96"
+              stroke="#eee"
+              strokeWidth="30"
+              fillOpacity="0"/>
+            <path
+              d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96"
+              stroke={ diskUsedColor(partition.use) }
+              strokeWidth="30"
+              fillOpacity="0"
+              style={ {
+                strokeDasharray: "301.635, 301.635",
+                strokeDashoffset: `${ (1 - partition.use / 100) * 301.635 }`
+              } }
+            />
+          </svg>
+          <div className="progressbar-text text-muted text-center"
+               style={ {
+                 padding: '0px',
+                 margin: '0px',
+                 fontSize: '0.8rem',
+                 position: 'relative',
+                 top: '-55px',
+                 left: '0',
+               } }
+          >
+            { partition.use.toFixed(0) + '%' }
+          </div>
         </div>
         <div className="d-flex align-items-center ml-3">
           <div className="d-flex flex-column justify-content-center">
             <div className=""><strong>{ partition.mount }</strong></div>
             <div className="text-black-50">
               <small>
-                { 'Total: ' + (partition.size/1024/1024/1024).toFixed(0) + ' GB'}
+                { 'Total: ' + (partition.size / 1024 / 1024 / 1024).toFixed(0) + ' GB' }
               </small>
             </div>
           </div>
@@ -162,14 +174,16 @@ export default function Home(
           <strong>{ data.osInfo.distro }</strong> { `${ data.osInfo.release } (${ data.osInfo.codename }) ${ data.osInfo.kernel } ${ data.osInfo.arch }` }
         </div>
 
-        {connected &&
+        { connected &&
         <div className="alert alert-success d-flex justify-content-between align-items-center">
           <div>Connected to VPN</div>
+          <button className="btn btn-danger" onClick={ disconnect }>Disconnect</button>
         </div>
         }
-        {!connected &&
+        { !connected &&
         <div className="alert alert-danger d-flex justify-content-between align-items-center">
           Not Connected to VPN
+          <button className="btn btn-primary" onClick={ connect }>Connect</button>
         </div>
         }
 
