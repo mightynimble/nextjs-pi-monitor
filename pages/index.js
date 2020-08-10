@@ -109,11 +109,11 @@ function diskUsedColor(use) {
   return red;
 }
 
-const VpnActionButton = React.forwardRef(({ onClick, href }, ref) => {
+const VpnActionButton = React.forwardRef(({ onClick, href, name }, ref) => {
   return (
     <form action={ href } method="POST">
       <button className="btn btn-primary">
-        Click Me
+        {name}
       </button>
     </form>
   );
@@ -191,14 +191,16 @@ export default function Home(
         { connected &&
         <div className="alert alert-success d-flex justify-content-between align-items-center">
           <div>Connected to VPN</div>
-          <button className="btn btn-danger" onClick={ disconnect }>Disconnect</button>
+          <Link href={ `${ apiRootUrl }/expressvpn/disconnect` } passHref>
+            <VpnActionButton name='Disconnect' />
+          </Link>
         </div>
         }
         { !connected &&
         <div className="alert alert-danger d-flex justify-content-between align-items-center">
           Not Connected to VPN
-          <Link href={ `${ apiRootUrl }/expressvpn/disconnect` } passHref>
-            <VpnActionButton/>
+          <Link href={ `${ apiRootUrl }/expressvpn/connect` } passHref>
+            <VpnActionButton name='Connect' />
           </Link>
         </div>
         }
