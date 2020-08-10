@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const si = require('systeminformation');
 const fetch = require('node-fetch');
 
@@ -107,6 +109,16 @@ function diskUsedColor(use) {
   return red;
 }
 
+const VpnActionButton = React.forwardRef(({ onClick, href }, ref) => {
+  return (
+    <form action={ href } method="POST">
+      <button className="btn btn-primary">
+        Click Me
+      </button>
+    </form>
+  );
+});
+
 export default function Home(
   {
     data,
@@ -185,7 +197,9 @@ export default function Home(
         { !connected &&
         <div className="alert alert-danger d-flex justify-content-between align-items-center">
           Not Connected to VPN
-          <button className="btn btn-primary" onClick={ connect }>Connect</button>
+          <Link href={ `${ apiRootUrl }/expressvpn/disconnect` } passHref>
+            <VpnActionButton/>
+          </Link>
         </div>
         }
 
