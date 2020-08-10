@@ -37,13 +37,15 @@ export async function getServerSideProps() {
   }
 }
 
-function disconnect(e) {
-  fetch(`${ apiRootUrl }/expressvpn/disconnect`, { method: 'post' });
+async function disconnect(e) {
+  const res = await fetch(`${ apiRootUrl }/expressvpn/disconnect`, { method: 'post' });
+  console.log(">>>>>>>  --------- res: ", res);
   window.location.assign('/');
 }
 
-function connect(e) {
-  fetch(`${ apiRootUrl }/expressvpn/connect`, { method: 'post' });
+async function connect(e) {
+  const res = await fetch(`${ apiRootUrl }/expressvpn/connect`, { method: 'post' });
+  console.log(">>>>>>>  --------- res: ", res);
   window.location.assign('/');
 }
 
