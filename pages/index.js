@@ -8,7 +8,7 @@ const orange = '#fd7e14';
 const yellow = '#ffc107';
 const green = '#28a745';
 
-const apiRootUrl = 'http://localhost:8181';
+const apiRootUrl = 'http://192.168.1.211:8181';
 
 async function getVpnStatus() {
   const res = await fetch(`${ apiRootUrl }/expressvpn/status`);
